@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Dashboard</title>
+<style>
+body {font-family: Arial; background:#f2f2f2; margin:0; padding:20px;}
+.card {background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.1);} 
+.title {font-size:22px; font-weight:bold; margin-bottom:10px;}
+.amount {font-size:40px; color:#000;}
+.green {color:green; font-weight:bold;}
+.red {color:red;}
+.btn {background:#0070ba; color:#fff; padding:12px; border:none; border-radius:25px; width:100%; margin-top:10px;}
+.row {display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;}
+.small {color:#666; font-size:12px;}
+</style>
+</head>
+<body>
+
+<div class="card">
+<div class="title">Transaction</div>
+<div id="merchant"></div>
+<div id="date"></div>
+<div class="amount" id="amount"></div>
+<div class="green">VERIFIED TRANSACTION</div>
+</div>
+
+<div class="card">
+<div class="title">Institutional Record</div>
+<div>Reference ID: <span id="ref"></span></div>
+<div>Invoice: <span id="invoice"></span></div>
+<div>Date: <span id="invoiceDate"></span></div>
+<div>Gateway IP: <span id="ip"></span></div>
+</div>
+
+<div class="card">
+<div class="title">Available Funds</div>
+<div class="amount" id="funds"></div>
+<button class="btn">Transfer Funds</button>
+</div>
+
+<div class="card">
+<div class="title">Recent Ledger Activity</div>
+<div id="ledger"></div>
+</div>
+
+<script>
+function rand(min, max) {return Math.random() * (max - min) + min;}
+function randInt(min, max) {return Math.floor(rand(min,max));}
+
+function randomID() {return 'PP-' + Math.random().toString(36).substring(2,12).toUpperCase();}
+function randomInvoice() {return 'INV-' + randInt(100000,999999);}
+function randomIP() {return randInt(1,255)+'.'+randInt(1,255)+'.'+randInt(1,255)+'.'+randInt(1,255);} 
+
+function randomDate() {
+ let d = new Date();
+ d.setDate(d.getDate() - randInt(0,10));
+ return d.toDateString();
+}
+
+function randomMerchant() {
+ let list = ['Cloud Infrastructure','Digital License','Enterprise Tools','Hosting Service'];
+ return list[randInt(0,list.length)];
+}
+
+function randomAmount() {
+ return (-rand(50,1000)).toFixed(2);
+}
+
+function randomFunds() {
+ return (rand(500,5000)).toFixed(2);
+}
+
+function loadData() {
+ document.getElementById('merchant').innerText = randomMerchant();
+ document.getElementById('date').innerText = randomDate();
+ document.getElementById('amount').innerText = '$' + randomAmount();
+ document.getElementById('ref').innerText = randomID();
+ document.getElementById('invoice').innerText = randomInvoice();
+ document.getElementById('invoiceDate').innerText = randomDate();
+ document.getElementById('ip').innerText = randomIP();
+ document.getElementById('funds').innerText = '$' + randomFunds();
+
+ let ledgerHTML = '';
+ for(let i=0;i<5;i++){
+ ledgerHTML += `<div class="row"><div>Walmart Inc<br><span class='small'>${randomDate()}</span></div><div class='red'>$${randomAmount()}</div></div>`;
+ }
+ document.getElementById('ledger').innerHTML = ledgerHTML;
+}
+
+loadData();
+</script>
+
+</body>
+  </html>
+  
