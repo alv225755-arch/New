@@ -3,101 +3,223 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secure Payment</title>
+<title>SecurePay Premium UI</title>
+
 <style>
-body{margin:0;font-family:Arial;background:#f2f2f2;}
-.header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:#fff;}
-.header img{height:28px;}
-.menu span{margin-left:15px;color:#0070ba;font-weight:bold;}
-.card{background:#fff;margin:20px auto;padding:20px;border-radius:12px;max-width:500px;box-shadow:0 2px 8px rgba(0,0,0,0.1);} 
-.amount{font-size:42px;margin:10px 0;}
-.green{background:#d4f5e9;color:#0a8f5a;padding:6px 12px;border-radius:20px;display:inline-block;font-size:12px;}
-.box{border:2px dashed red;padding:15px;margin-top:15px;text-align:center;border-radius:10px;}
-.blue{color:#0070ba;font-size:24px;font-weight:bold;}
-.section-title{margin-top:20px;font-weight:bold;color:#0070ba;}
-.row{display:flex;justify-content:space-between;margin:8px 0;}
-.small{color:#666;font-size:12px;}
-.btn{margin-top:15px;padding:12px;border-radius:25px;border:none;width:100%;font-weight:bold;}
-.primary{background:#0070ba;color:#fff;}
-.loader{position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;}
-.spinner{border:5px solid #eee;border-top:5px solid #0070ba;border-radius:50%;width:50px;height:50px;animation:spin 1s linear infinite;margin-top:20px;}
-@keyframes spin{0%{transform:rotate(0);}100%{transform:rotate(360deg);}}
-@media(max-width:600px){.card{margin:10px;}}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto;
+  background:#eef2f7;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  padding:18px 25px;
+  background:#fff;
+  font-weight:600;
+  color:#1a3c8b;
+}
+
+.logo{font-size:24px;}
+
+.container{
+  max-width:480px;
+  margin:40px auto;
+}
+
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.title{
+  font-size:26px;
+  font-weight:700;
+  color:#1a3c8b;
+  text-align:center;
+}
+
+.desc{
+  text-align:center;
+  margin-top:10px;
+  color:#555;
+  line-height:1.5;
+}
+
+.red{color:#d93025;font-weight:600;}
+
+.info{
+  background:#f7f9fc;
+  border-radius:15px;
+  padding:15px;
+  margin-top:20px;
+  font-size:14px;
+}
+
+.info div{margin:6px 0;}
+
+.callbtn{
+  display:block;
+  text-align:center;
+  background:linear-gradient(135deg,#0a66c2,#004ea8);
+  color:#fff;
+  padding:16px;
+  border-radius:35px;
+  margin-top:20px;
+  font-weight:700;
+  text-decoration:none;
+  box-shadow:0 6px 15px rgba(10,102,194,0.4);
+  transition:0.2s;
+}
+
+.callbtn:hover{transform:scale(1.03);}
+
+.loader{
+  position:fixed;
+  inset:0;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.spinner{
+  border:5px solid #eee;
+  border-top:5px solid #0a66c2;
+  border-radius:50%;
+  width:55px;
+  height:55px;
+  animation:spin 1s linear infinite;
+  margin-top:20px;
+}
+
+@keyframes spin{100%{transform:rotate(360deg);}}
+
+/* BLUR BACKGROUND MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  backdrop-filter:blur(8px);
+  background:rgba(0,0,0,0.25);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition:0.4s ease;
+}
+
+.modal.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.modal-box{
+  background:#fff;
+  border-radius:25px;
+  padding:30px;
+  width:90%;
+  max-width:420px;
+  text-align:center;
+  transform:translateY(40px);
+  transition:0.4s ease;
+}
+
+.modal.active .modal-box{
+  transform:translateY(0);
+}
+
+@media(max-width:600px){
+  .container{margin:20px;}
+}
+
 </style>
 </head>
 <body>
 
 <div class="loader" id="loader">
-<img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="paypal">
-<div class="spinner"></div>
-<p>Connecting to secure server...</p>
+  <div class="logo">SecurePay</div>
+  <div class="spinner"></div>
+  <p>Connecting securely...</p>
 </div>
 
-<div id="content" style="display:none;">
-<div class="header">
-<img src="https://www.paypalobjects.com/webstatic/icon/pp258.png">
-<div class="menu"><span>Activity</span><span>Wallet</span><span>Help</span></div>
+<div id="main" style="display:none;">
+  <div class="header">
+    <div class="logo">SecurePay</div>
+    <div>Activity | Wallet | Help</div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="title">Account Overview</div>
+      <div class="desc">Your recent activity is being reviewed.</div>
+    </div>
+  </div>
 </div>
 
-<div class="card">
-<h3>Global Merchant Node & Compliance</h3>
-<div id="sysdate"></div>
-<div class="amount" id="amount"></div>
-<div class="green">VERIFIED TRANSACTION</div>
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="title">Manual Review Required</div>
+    <div class="desc">
+      Disbursement of <span class="red" id="amount"></span> has been placed on hold.
+    </div>
 
-<div class="box">
-24/7 FRAUD PREVENTION HOTLINE<br>
-<div class="blue">+1 805 321 6308</div>
-Unauthorized? Contact support immediately
-</div>
+    <div class="info">
+      <div><b>LOG STATUS:</b> <span class="red">PENDING REVIEW</span></div>
+      <div><b>REFERENCE:</b> <span id="ref"></span></div>
+      <div><b>DATE:</b> <span id="date"></span></div>
+      <div><b>USER AGENT IP:</b> <span id="ip"></span></div>
+      <div><b>LOCATION:</b> San Jose, US / Region Sync Active</div>
+      <div><b>ACTION:</b> Contact Security Center within 12 Hours</div>
+    </div>
 
-<div class="section-title">INSTITUTIONAL RECORD DETAILS</div>
-<div>Reference ID: <span id="ref"></span></div>
-<div>Invoice: <span id="inv"></span></div>
-<div>Date & Time: <span id="date"></span></div>
-<div>Gateway IP: <span id="ip"></span></div>
-
-<div class="section-title">AVAILABLE ACCOUNT FUNDS</div>
-<div class="amount" id="funds"></div>
-<button class="btn primary">Transfer Funds</button>
-
-<div class="section-title">RECENT LEDGER ACTIVITY</div>
-<div id="ledger"></div>
-</div>
+    <a href="tel:+18053216308" class="callbtn">
+      CALL NOW: +1 805 321 6308
+    </a>
+  </div>
 </div>
 
 <script>
 function rand(min,max){return Math.random()*(max-min)+min;}
 function rInt(min,max){return Math.floor(rand(min,max));}
-function rID(){return 'PP-'+Math.random().toString(36).substr(2,10).toUpperCase();}
-function rInv(){return 'INV-'+rInt(100000,999999);} 
-function rIP(){return rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255);} 
-function rAmt(){return (-rand(50,1000)).toFixed(2);} 
-function rFunds(){return (rand(800,2000)).toFixed(2);} 
 
-function load(){
-let now=new Date();
-document.getElementById('sysdate').innerText=now.toString();
-document.getElementById('amount').innerText='$'+rAmt();
-document.getElementById('ref').innerText=rID();
-document.getElementById('inv').innerText=rInv();
-document.getElementById('date').innerText=now.toString();
-document.getElementById('ip').innerText=rIP();
-document.getElementById('funds').innerText='$'+rFunds();
+function randomID(){return 'PP-REC-'+Math.random().toString(36).substr(2,10).toUpperCase();}
+function randomIP(){return rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255);} 
+function randomAmount(){return '$'+rand(200,900).toFixed(2);} 
 
-let html='';
-for(let i=0;i<5;i++){
-html+=`<div class='row'><div>Walmart Inc<br><span class='small'>${new Date().toDateString()}</span></div><div style='color:red'>$${rAmt()}</div></div>`;
-}
-document.getElementById('ledger').innerHTML=html;
+function loadData(){
+  let now=new Date();
+  let amt=randomAmount();
+
+  document.getElementById('amount').innerText=amt;
+  document.getElementById('ref').innerText=randomID();
+  document.getElementById('date').innerText=now.toString();
+  document.getElementById('ip').innerText=randomIP();
+
+  let msg=new SpeechSynthesisUtterance(
+    "Alert. A transaction of "+amt+" requires review."
+  );
+  speechSynthesis.speak(msg);
 }
 
 setTimeout(()=>{
-document.getElementById('loader').style.display='none';
-document.getElementById('content').style.display='block';
-load();
-},2500);
+  document.getElementById('loader').style.display='none';
+  document.getElementById('main').style.display='block';
+
+  loadData();
+
+  setTimeout(()=>{
+    document.getElementById('modal').classList.add('active');
+  },500);
+
+},1800);
 </script>
 
 </body>
-</html>
+  </html>
