@@ -3,30 +3,153 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SecurePay Dashboard</title>
+<title>Secure Payment UI</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#f2f4f8;color:#111;}
-.header{display:flex;justify-content:space-between;padding:15px 20px;background:#fff;font-weight:bold;color:#003087;}
-.container{max-width:500px;margin:20px auto;}
-.card{background:#fff;border-radius:15px;padding:20px;margin-bottom:20px;box-shadow:0 3px 10px rgba(0,0,0,0.08);}
-.title{font-size:18px;color:#003087;font-weight:bold;margin-bottom:10px;}
-.amount{font-size:40px;margin:10px 0;}
-.green{background:#d4f5e9;color:#0a8f5a;padding:5px 10px;border-radius:15px;display:inline-block;font-size:12px;}
-.hotline{border:2px dashed red;padding:15px;text-align:center;margin-top:15px;border-radius:10px;}
-.blue{color:#0070ba;font-size:24px;font-weight:bold;}
-.section{margin-top:20px;}
-.row{display:flex;justify-content:space-between;margin:6px 0;font-size:14px;}
-.btn{padding:12px;border-radius:25px;border:none;margin-top:10px;width:48%;}
+body{
+  margin:0;
+  font-family:-apple-system,Segoe UI,Roboto;
+  background:#f2f4f8;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  padding:15px 20px;
+  background:#fff;
+  color:#003087;
+  font-weight:600;
+}
+
+/* MODAL (FIRST PAGE) */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(8px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-box{
+  background:#fff;
+  border-radius:25px;
+  padding:25px;
+  width:90%;
+  max-width:420px;
+  text-align:center;
+}
+
+/* TEXT */
+.title{
+  font-size:26px;
+  color:#003087;
+  font-weight:700;
+}
+
+.desc{
+  margin-top:10px;
+  color:#555;
+  line-height:1.5;
+}
+
+.red{color:#d93025;font-weight:bold;}
+.bold{font-weight:bold;}
+
+/* INFO BOX */
+.info{
+  background:#f7f9fc;
+  border-radius:15px;
+  padding:15px;
+  text-align:left;
+  margin-top:20px;
+}
+
+.info div{margin:6px 0;}
+
+/* BUTTONS */
+.callbtn{
+  display:block;
+  background:#0070ba;
+  color:#fff;
+  padding:16px;
+  border-radius:35px;
+  margin-top:20px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:18px;
+}
+
+.link{
+  margin-top:15px;
+  display:block;
+  color:#0070ba;
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+/* SECOND PAGE */
+.container{
+  max-width:500px;
+  margin:20px auto;
+  display:none;
+}
+
+.card{
+  background:#fff;
+  border-radius:15px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+.amount{
+  font-size:40px;
+  margin:10px 0;
+}
+
+.green{
+  background:#d4f5e9;
+  color:#0a8f5a;
+  padding:5px 10px;
+  border-radius:15px;
+  font-size:12px;
+  display:inline-block;
+}
+
+.section-title{
+  margin-top:20px;
+  color:#003087;
+  font-weight:bold;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0;
+}
+
+.btn{
+  padding:12px;
+  border-radius:25px;
+  border:none;
+  width:48%;
+}
+
 .primary{background:#0070ba;color:#fff;}
 .secondary{background:#fff;border:2px solid #0070ba;color:#0070ba;}
-.fullbtn{width:100%;background:#0070ba;color:#fff;margin-top:15px;}
+
+.fullbtn{
+  width:100%;
+  background:#0070ba;
+  color:#fff;
+  margin-top:15px;
+}
+
 .small{font-size:12px;color:#666;}
 
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(8px);display:flex;justify-content:center;align-items:center;}
-.modal-box{background:#fff;padding:25px;border-radius:20px;width:90%;max-width:420px;text-align:center;}
-
-.hidden{display:none;}
 </style>
 </head>
 
@@ -37,45 +160,66 @@ body{margin:0;font-family:Arial;background:#f2f4f8;color:#111;}
   <div>Activity Wallet Help</div>
 </div>
 
-<!-- MODAL -->
+<!-- FIRST PAGE -->
 <div class="modal" id="modal">
   <div class="modal-box">
-    <h2>Manual Review Required</h2>
-    <p>Disbursement of <b id="mAmount"></b> on hold.</p>
-    <p id="mDate"></p>
-    <a href="#" onclick="openFull()" style="color:#0070ba;">See full transaction</a>
+
+    <div class="title">Manual Intervention Required</div>
+
+    <div class="desc">
+      Disbursement of <span class="red">$850.50</span> has been placed on 
+      <span class="bold">SECURITY HOLD</span>.
+    </div>
+
+    <div class="info">
+      <div><b>LOG STATUS:</b> <span class="red">PENDING REVIEW</span></div>
+      <div><b>REFERENCE:</b> PP-REC-EE3F4CDGFG</div>
+      <div><b>DATE:</b> <span id="date"></span></div>
+      <div><b>USER AGENT IP:</b> 45.79.12.44</div>
+      <div><b>LOCATION:</b> San Jose, US / Region Sync Active</div>
+      <div><b>ACTION:</b> Contact Security Center within 12 Hours</div>
+    </div>
+
+    <div class="desc">Verification Support Line:</div>
+
+    <a href="tel:+18053216308" class="callbtn">
+      CALL NOW: +1 805 321 6308
+    </a>
+
+    <div class="link" onclick="openFull()">
+      See full transaction details
+    </div>
+
   </div>
 </div>
 
-<!-- FULL PAGE -->
-<div class="container hidden" id="fullPage">
+<!-- SECOND PAGE -->
+<div class="container" id="fullPage">
 
   <div class="card">
-    <div class="title">Global Merchant Node & Compliance</div>
+    <div class="section-title">Global Merchant Node & Compliance</div>
     <div class="small">San Jose, CA</div>
-    <div class="amount" id="amount"></div>
+    <div class="amount">-$841.07</div>
     <div class="green">VERIFIED TRANSACTION</div>
 
-    <div class="hotline">
+    <div style="border:2px dashed red;padding:15px;margin-top:15px;text-align:center;border-radius:10px;">
       24/7 FRAUD PREVENTION HOTLINE<br>
-      <div class="blue">+1 805 321 6308</div>
+      <div style="color:#0070ba;font-size:22px;font-weight:bold;">
+        +1 805 321 6308
+      </div>
       <div class="small">Unauthorized? Contact support immediately</div>
     </div>
 
-    <div class="section">
-      <div class="title">INSTITUTIONAL RECORD DETAILS</div>
-      <div class="row"><span>Reference ID</span><span id="ref"></span></div>
-      <div class="row"><span>Invoice</span><span id="inv"></span></div>
-      <div class="row"><span>Date</span><span id="date"></span></div>
-      <div class="row"><span>Gateway IP</span><span id="ip"></span></div>
-    </div>
+    <div class="section-title">INSTITUTIONAL RECORD DETAILS</div>
+    <div class="row"><span>Reference ID</span><span>PP-REC-EOZGXS5DRIA</span></div>
+    <div class="row"><span>Invoice</span><span>INV-3074660</span></div>
+    <div class="row"><span>Date</span><span id="date2"></span></div>
+    <div class="row"><span>Gateway IP</span><span>13.248.169.48</span></div>
 
-    <div class="section">
-      <div class="title">MERCHANT METADATA</div>
-      <div class="row"><span>Merchant ID</span><span id="mid"></span></div>
-      <div class="row"><span>Memo</span><span>Enterprise License</span></div>
-      <div class="row"><span>Note</span><span>Non-Refundable</span></div>
-    </div>
+    <div class="section-title">MERCHANT METADATA</div>
+    <div class="row"><span>Merchant ID</span><span>MID-74649335</span></div>
+    <div class="row"><span>Memo</span><span>Enterprise License Renewal</span></div>
+    <div class="row"><span>Note</span><span>Non-Refundable Digital</span></div>
 
     <div style="display:flex;justify-content:space-between;">
       <button class="btn secondary">Download Audit</button>
@@ -85,57 +229,30 @@ body{margin:0;font-family:Arial;background:#f2f4f8;color:#111;}
   </div>
 
   <div class="card">
-    <div class="title">AVAILABLE ACCOUNT FUNDS</div>
-    <div class="amount" id="funds"></div>
+    <div class="section-title">AVAILABLE ACCOUNT FUNDS</div>
+    <div class="amount">$1153.08</div>
     <button class="fullbtn">Transfer Funds</button>
   </div>
 
   <div class="card">
-    <div class="title">RECENT LEDGER ACTIVITY</div>
-    <div id="ledger"></div>
+    <div class="section-title">RECENT LEDGER ACTIVITY</div>
+    <div class="row"><span>Store 1</span><span>-179.65</span></div>
+    <div class="row"><span>Store 2</span><span>-11.63</span></div>
+    <div class="row"><span>Store 3</span><span>-168.87</span></div>
   </div>
 
 </div>
 
 <script>
-function rand(min,max){return Math.random()*(max-min)+min;}
-function rInt(min,max){return Math.floor(rand(min,max));}
-
-function randomID(){return 'PP-'+Math.random().toString(36).substr(2,10).toUpperCase();}
-function randomInvoice(){return 'INV-'+rInt(100000,999999);}
-function randomIP(){return rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255);}
-function randomAmount(){return '-$'+rand(100,900).toFixed(2);}
-function randomFunds(){return '$'+rand(500,2000).toFixed(2);}
-
-function loadData(){
-  let now=new Date();
-
-  let amt=randomAmount();
-
-  document.getElementById('amount').innerText=amt;
-  document.getElementById('mAmount').innerText=amt;
-  document.getElementById('ref').innerText=randomID();
-  document.getElementById('inv').innerText=randomInvoice();
-  document.getElementById('date').innerText=now.toString();
-  document.getElementById('mDate').innerText=now.toString();
-  document.getElementById('ip').innerText=randomIP();
-  document.getElementById('mid').innerText='MID-'+rInt(1000000,9999999);
-  document.getElementById('funds').innerText=randomFunds();
-
-  let html='';
-  for(let i=0;i<5;i++){
-    html+=`<div class=\"row\"><span>Store ${i+1}<br><span class='small'>${new Date().toDateString()}</span></span><span>${randomAmount()}</span></div>`;
-  }
-  document.getElementById('ledger').innerHTML=html;
-}
+let now = new Date().toString();
+document.getElementById('date').innerText = now;
+document.getElementById('date2').innerText = now;
 
 function openFull(){
   document.getElementById('modal').style.display='none';
-  document.getElementById('fullPage').classList.remove('hidden');
+  document.getElementById('fullPage').style.display='block';
 }
-
-loadData();
 </script>
 
 </body>
-  </html>
+                                                                               </html>
