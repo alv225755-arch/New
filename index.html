@@ -3,14 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secure Payment UI</title>
+<title>Secure Dashboard</title>
 
 <style>
 body{
   margin:0;
-  font-family:-apple-system,Segoe UI,Roboto;
-  background:#f2f4f8;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  background:#eef2f7;
 }
+
+/* LOADER */
+.loader{
+  position:fixed;
+  inset:0;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+.spinner{
+  border:5px solid #eee;
+  border-top:5px solid #0070ba;
+  border-radius:50%;
+  width:60px;height:60px;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{100%{transform:rotate(360deg);}}
 
 /* HEADER */
 .header{
@@ -20,239 +40,225 @@ body{
   background:#fff;
   color:#003087;
   font-weight:600;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
 }
 
-/* MODAL (FIRST PAGE) */
+/* CONTAINER */
+.container{
+  max-width:520px;
+  margin:25px auto;
+}
+
+/* CARD */
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:24px;
+  margin-bottom:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* TEXT */
+.big{font-size:36px;font-weight:700;}
+.title{font-weight:700;color:#003087;margin-bottom:10px;}
+.small{font-size:13px;color:#666;}
+.green{background:#d4f5e9;color:#0a8f5a;padding:6px 12px;border-radius:15px;font-size:12px;display:inline-block;}
+.red{color:#d93025;font-weight:700;}
+
+/* ROW */
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin:10px 0;
+}
+
+/* BUTTON */
+.btn{
+  padding:15px;
+  border-radius:30px;
+  border:none;
+  font-weight:700;
+  cursor:pointer;
+}
+.primary{background:#0070ba;color:#fff;}
+.secondary{border:2px solid #0070ba;color:#0070ba;background:#fff;}
+.full{width:100%;}
+
+/* MODAL */
 .modal{
   position:fixed;
   inset:0;
+  backdrop-filter:blur(10px);
   background:rgba(0,0,0,0.3);
-  backdrop-filter:blur(8px);
   display:flex;
   justify-content:center;
   align-items:center;
 }
-
 .modal-box{
   background:#fff;
-  border-radius:25px;
   padding:25px;
+  border-radius:25px;
   width:90%;
   max-width:420px;
   text-align:center;
 }
 
-/* TEXT */
-.title{
-  font-size:26px;
-  color:#003087;
-  font-weight:700;
-}
-
-.desc{
-  margin-top:10px;
-  color:#555;
-  line-height:1.5;
-}
-
-.red{color:#d93025;font-weight:bold;}
-.bold{font-weight:bold;}
-
-/* INFO BOX */
-.info{
-  background:#f7f9fc;
-  border-radius:15px;
-  padding:15px;
-  text-align:left;
-  margin-top:20px;
-}
-
-.info div{margin:6px 0;}
-
-/* BUTTONS */
-.callbtn{
-  display:block;
-  background:#0070ba;
-  color:#fff;
-  padding:16px;
-  border-radius:35px;
-  margin-top:20px;
-  text-decoration:none;
-  font-weight:700;
-  font-size:18px;
-}
-
-.link{
-  margin-top:15px;
-  display:block;
-  color:#0070ba;
-  text-decoration:underline;
-  cursor:pointer;
-}
-
-/* SECOND PAGE */
-.container{
-  max-width:500px;
-  margin:20px auto;
-  display:none;
-}
-
-.card{
-  background:#fff;
-  border-radius:15px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.08);
-}
-
-.amount{
-  font-size:40px;
-  margin:10px 0;
-}
-
-.green{
-  background:#d4f5e9;
-  color:#0a8f5a;
-  padding:5px 10px;
-  border-radius:15px;
-  font-size:12px;
-  display:inline-block;
-}
-
-.section-title{
-  margin-top:20px;
-  color:#003087;
-  font-weight:bold;
-}
-
-.row{
-  display:flex;
-  justify-content:space-between;
-  margin:6px 0;
-}
-
-.btn{
-  padding:12px;
-  border-radius:25px;
-  border:none;
-  width:48%;
-}
-
-.primary{background:#0070ba;color:#fff;}
-.secondary{background:#fff;border:2px solid #0070ba;color:#0070ba;}
-
-.fullbtn{
-  width:100%;
-  background:#0070ba;
-  color:#fff;
-  margin-top:15px;
-}
-
-.small{font-size:12px;color:#666;}
-
+/* HIDDEN */
+.hidden{display:none;}
 </style>
 </head>
 
 <body>
 
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <h2>SecurePay</h2>
+  <div class="spinner"></div>
+  <p>Connecting to secure server...</p>
+</div>
+
+<!-- HEADER -->
 <div class="header">
   <div>SecurePay</div>
-  <div>Activity Wallet Help</div>
+  <div>Activity | Wallet | Help</div>
 </div>
 
 <!-- FIRST PAGE -->
 <div class="modal" id="modal">
   <div class="modal-box">
+    <h2>Manual Review Required</h2>
 
-    <div class="title">Manual Intervention Required</div>
+    <p>
+      Disbursement of <span class="red" id="mAmt"></span> placed on hold.
+    </p>
 
-    <div class="desc">
-      Disbursement of <span class="red">$850.50</span> has been placed on 
-      <span class="bold">SECURITY HOLD</span>.
-    </div>
-
-    <div class="info">
+    <div class="card" style="text-align:left;">
       <div><b>LOG STATUS:</b> <span class="red">PENDING REVIEW</span></div>
-      <div><b>REFERENCE:</b> PP-REC-EE3F4CDGFG</div>
+      <div><b>REFERENCE:</b> <span id="ref"></span></div>
       <div><b>DATE:</b> <span id="date"></span></div>
-      <div><b>USER AGENT IP:</b> 45.79.12.44</div>
-      <div><b>LOCATION:</b> San Jose, US / Region Sync Active</div>
-      <div><b>ACTION:</b> Contact Security Center within 12 Hours</div>
+      <div><b>IP:</b> <span id="ip"></span></div>
+      <div><b>LOCATION:</b> San Jose, US</div>
+      <div><b>ACTION:</b> Contact support</div>
     </div>
 
-    <div class="desc">Verification Support Line:</div>
-
-    <a href="tel:+18053216308" class="callbtn">
-      CALL NOW: +1 805 321 6308
+    <a href="tel:+18053216308">
+      <button class="btn primary full">CALL NOW: +1 805 321 6308</button>
     </a>
 
-    <div class="link" onclick="openFull()">
-      See full transaction details
-    </div>
+    <p onclick="openFull()" style="margin-top:15px;color:#0070ba;cursor:pointer;">
+      See full transaction
+    </p>
 
   </div>
 </div>
 
 <!-- SECOND PAGE -->
-<div class="container" id="fullPage">
+<div class="container hidden" id="page2">
 
   <div class="card">
-    <div class="section-title">Global Merchant Node & Compliance</div>
+    <div class="title">Merchant Overview</div>
     <div class="small">San Jose, CA</div>
-    <div class="amount">-$841.07</div>
+    <div class="big" id="amt"></div>
     <div class="green">VERIFIED TRANSACTION</div>
 
-    <div style="border:2px dashed red;padding:15px;margin-top:15px;text-align:center;border-radius:10px;">
-      24/7 FRAUD PREVENTION HOTLINE<br>
-      <div style="color:#0070ba;font-size:22px;font-weight:bold;">
-        +1 805 321 6308
-      </div>
-      <div class="small">Unauthorized? Contact support immediately</div>
+    <div class="card" style="border:2px dashed red;text-align:center;margin-top:15px;">
+      Hotline<br>
+      <div class="big" style="color:#0070ba;">+1 805 321 6308</div>
     </div>
 
-    <div class="section-title">INSTITUTIONAL RECORD DETAILS</div>
-    <div class="row"><span>Reference ID</span><span>PP-REC-EOZGXS5DRIA</span></div>
-    <div class="row"><span>Invoice</span><span>INV-3074660</span></div>
+    <div class="title">Institutional Record</div>
+    <div class="row"><span>Reference</span><span id="ref2"></span></div>
+    <div class="row"><span>Invoice</span><span id="inv"></span></div>
     <div class="row"><span>Date</span><span id="date2"></span></div>
-    <div class="row"><span>Gateway IP</span><span>13.248.169.48</span></div>
+    <div class="row"><span>IP</span><span id="ip2"></span></div>
 
-    <div class="section-title">MERCHANT METADATA</div>
-    <div class="row"><span>Merchant ID</span><span>MID-74649335</span></div>
-    <div class="row"><span>Memo</span><span>Enterprise License Renewal</span></div>
-    <div class="row"><span>Note</span><span>Non-Refundable Digital</span></div>
+    <div class="title">Metadata</div>
+    <div class="row"><span>Merchant ID</span><span id="mid"></span></div>
 
-    <div style="display:flex;justify-content:space-between;">
-      <button class="btn secondary">Download Audit</button>
-      <button class="btn primary">Resolution Center</button>
+    <div style="display:flex;gap:10px;">
+      <button class="btn secondary">Download</button>
+      <button class="btn primary">Resolution</button>
     </div>
-
   </div>
 
   <div class="card">
-    <div class="section-title">AVAILABLE ACCOUNT FUNDS</div>
-    <div class="amount">$1153.08</div>
-    <button class="fullbtn">Transfer Funds</button>
+    <div class="title">Available Funds</div>
+    <div class="big" id="funds"></div>
+    <button class="btn primary full">Transfer Funds</button>
   </div>
 
   <div class="card">
-    <div class="section-title">RECENT LEDGER ACTIVITY</div>
-    <div class="row"><span>Store 1</span><span>-179.65</span></div>
-    <div class="row"><span>Store 2</span><span>-11.63</span></div>
-    <div class="row"><span>Store 3</span><span>-168.87</span></div>
+    <div class="title">Recent Activity</div>
+    <div id="ledger"></div>
   </div>
 
 </div>
 
 <script>
-let now = new Date().toString();
-document.getElementById('date').innerText = now;
-document.getElementById('date2').innerText = now;
+function r(min,max){return Math.random()*(max-min)+min;}
+function ri(min,max){return Math.floor(r(min,max));}
+
+function randomIP(){
+  return ri(1,255)+'.'+ri(1,255)+'.'+ri(1,255)+'.'+ri(1,255);
+}
+
+function animateNumber(el, final){
+  let start=0;
+  let duration=600;
+  let startTime=null;
+
+  function update(t){
+    if(!startTime) startTime=t;
+    let progress=Math.min((t-startTime)/duration,1);
+    let val=(final*progress).toFixed(2);
+    el.innerText='-$'+val;
+    if(progress<1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+function gen(){
+  let now=new Date().toString();
+  let num=r(100,900);
+
+  animateNumber(document.getElementById('amt'), num);
+  animateNumber(document.getElementById('mAmt'), num);
+
+  let ref='PP-'+Math.random().toString(36).substr(2,8).toUpperCase();
+
+  document.getElementById('ref').innerText=ref;
+  document.getElementById('ref2').innerText=ref;
+
+  document.getElementById('inv').innerText='INV-'+ri(100000,999999);
+
+  let ip=randomIP();
+  document.getElementById('ip').innerText=ip;
+  document.getElementById('ip2').innerText=ip;
+
+  document.getElementById('mid').innerText='MID-'+ri(1000000,9999999);
+
+  document.getElementById('date').innerText=now;
+  document.getElementById('date2').innerText=now;
+
+  document.getElementById('funds').innerText='$'+r(800,2000).toFixed(2);
+
+  let html='';
+  for(let i=0;i<5;i++){
+    html+=`<div class='row'><span>Store ${i+1}</span><span>-$${r(10,200).toFixed(2)}</span></div>`;
+  }
+  document.getElementById('ledger').innerHTML=html;
+}
 
 function openFull(){
   document.getElementById('modal').style.display='none';
-  document.getElementById('fullPage').style.display='block';
+  document.getElementById('page2').classList.remove('hidden');
 }
+
+setTimeout(()=>{
+  document.getElementById('loader').style.display='none';
+  gen();
+},1500);
 </script>
 
 </body>
-                                                                               </html>
+  </html>
