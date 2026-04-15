@@ -3,31 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secured Wallet</title>
+<title>Secure Wallet</title>
 
 <style>
 body{
   margin:0;
   font-family:-apple-system,Segoe UI,Roboto;
-  background:#eef2f7;
+  background:linear-gradient(135deg,#e6ecf5,#f9fbff);
+  overflow-x:hidden;
+}
+
+/* GLASS EFFECT */
+.glass{
+  background:rgba(255,255,255,0.65);
+  backdrop-filter:blur(14px);
+  border-radius:20px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.08);
 }
 
 /* LOADER */
 .loader{
   position:fixed;
   inset:0;
-  background:#fff;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
-}
-
-.logo{
-  font-size:32px;
-  font-weight:bold;
-  color:#0070ba;
-  margin-bottom:20px;
+  background:#fff;
+  z-index:9999;
+  animation:fadeIn 0.6s ease;
 }
 
 .spinner{
@@ -39,32 +43,30 @@ body{
 }
 
 @keyframes spin{100%{transform:rotate(360deg);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
 /* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
   padding:18px 22px;
-  background:#fff;
   font-weight:700;
   font-size:18px;
   color:#003087;
-  box-shadow:0 3px 10px rgba(0,0,0,0.05);
 }
 
 /* CONTAINER */
 .container{
   max-width:560px;
-  margin:30px auto;
+  margin:40px auto;
+  animation:fadeUp 0.6s ease;
 }
 
 /* CARD */
 .card{
-  background:#fff;
-  border-radius:20px;
   padding:26px;
   margin-bottom:25px;
-  box-shadow:0 8px 25px rgba(0,0,0,0.08);
+  animation:fadeUp 0.5s ease;
 }
 
 /* TEXT */
@@ -75,30 +77,26 @@ body{
 }
 
 .title{
-  font-weight:800;
   font-size:18px;
+  font-weight:700;
   color:#003087;
   margin-bottom:12px;
 }
 
 .small{
   font-size:14px;
-  color:#666;
+  color:#555;
 }
 
 .green{
   background:#d4f5e9;
   color:#0a8f5a;
-  padding:7px 14px;
+  padding:6px 14px;
   border-radius:15px;
   font-size:13px;
-  display:inline-block;
 }
 
-.red{
-  color:#d93025;
-  font-weight:800;
-}
+.red{color:#d93025;font-weight:800;}
 
 /* ROW */
 .row{
@@ -110,41 +108,72 @@ body{
 
 /* BUTTON */
 .btn{
-  padding:18px;
+  padding:16px;
   border-radius:35px;
   border:none;
-  font-weight:800;
+  font-weight:700;
   font-size:16px;
+  cursor:pointer;
+  transition:all 0.2s ease;
 }
+.btn:active{transform:scale(0.96);}
+
 .primary{
-  background:#0070ba;
+  background:linear-gradient(135deg,#0070ba,#005ea6);
   color:#fff;
 }
+
 .secondary{
   border:2px solid #0070ba;
   color:#0070ba;
   background:#fff;
 }
+
 .full{width:100%;}
 
 /* MODAL */
 .modal{
   position:fixed;
   inset:0;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(12px);
   background:rgba(0,0,0,0.3);
   display:flex;
   justify-content:center;
   align-items:center;
+  animation:fadeIn 0.4s ease;
 }
 
 .modal-box{
-  background:#fff;
   padding:30px;
-  border-radius:25px;
   width:92%;
   max-width:460px;
   text-align:center;
+  animation:popIn 0.5s ease;
+}
+
+@keyframes popIn{
+  0%{transform:scale(0.85);opacity:0;}
+  100%{transform:scale(1);opacity:1;}
+}
+
+/* HOTLINE */
+.hotline{
+  margin-top:20px;
+  padding:18px;
+  border:2px dashed red;
+  text-align:center;
+  border-radius:15px;
+}
+
+.hotline-number{
+  font-size:22px;
+  color:#0070ba;
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
 }
 
 .hidden{display:none;}
@@ -155,27 +184,28 @@ body{
 
 <!-- LOADER -->
 <div class="loader" id="loader">
-  <div class="logo">Secured Wallet</div>
   <div class="spinner"></div>
-  <p>Connecting to secure server...</p>
+  <p style="margin-top:20px;">
+    Connecting to your secure online wallet service with JAC
+  </p>
 </div>
 
 <!-- HEADER -->
 <div class="header">
-  <div>Secured Wallet</div>
+  <div>Secure Wallet</div>
   <div>Activity | Wallet | Help</div>
 </div>
 
 <!-- FIRST PAGE -->
 <div class="modal" id="modal">
-  <div class="modal-box">
-    <h2 style="font-size:24px;">Manual Review Required</h2>
+  <div class="modal-box glass">
+    <h2>Manual Review Required</h2>
 
-    <p style="font-size:18px;">
+    <p>
       Disbursement of <span class="red" id="mAmt"></span> placed on hold
     </p>
 
-    <div class="card" style="text-align:left;">
+    <div class="card glass" style="text-align:left;">
       <div><b>Status:</b> <span class="red">Pending Review</span></div>
       <div><b>Reference:</b> <span id="ref"></span></div>
       <div><b>Date:</b> <span id="date"></span></div>
@@ -190,26 +220,25 @@ body{
       </button>
     </a>
 
-    <p onclick="openFull()" style="margin-top:20px;font-size:16px;color:#0070ba;cursor:pointer;">
+    <p onclick="openFull()" style="margin-top:20px;color:#0070ba;cursor:pointer;">
       See full transaction
     </p>
-
   </div>
 </div>
 
 <!-- SECOND PAGE -->
 <div class="container hidden" id="page2">
 
-  <div class="card">
-    <div class="title">PayPal Global Merchant Node</div>
+  <div class="card glass">
+    <div class="title">Secure Wallet</div>
     <div class="small">San Jose, CA</div>
 
     <div class="big" id="amt"></div>
     <div class="green">VERIFIED TRANSACTION</div>
 
-    <div class="card" style="border:2px dashed red;text-align:center;margin-top:20px;">
+    <div class="hotline glass">
       24/7 SUPPORT LINE
-      <div class="big" style="color:#0070ba;">+1 805 321 6308</div>
+      <div class="hotline-number">+1 805 321 6308</div>
     </div>
 
     <div class="title">Transaction Details</div>
@@ -227,9 +256,9 @@ body{
     </div>
   </div>
 
-  <div class="card">
-    <div class="title">Available Funds</div>
-    <div class="big" id="funds"></div>
+  <div class="card glass">
+    <div class="title">Recent Transactions</div>
+    <div id="ledger"></div>
   </div>
 
 </div>
@@ -238,11 +267,14 @@ body{
 function r(min,max){return Math.random()*(max-min)+min;}
 function ri(min,max){return Math.floor(r(min,max));}
 
-function animate(el, val){
-  let start=0;
-  let dur=700;
-  let startTime=null;
+function formatDate(){
+  let d=new Date();
+  return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+" "+
+         d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+}
 
+function animate(el,val){
+  let start=0,dur=700,startTime=null;
   function step(t){
     if(!startTime) startTime=t;
     let p=Math.min((t-startTime)/dur,1);
@@ -257,14 +289,12 @@ function randomIP(){
 }
 
 function gen(){
-  let now=new Date().toString();
   let val=r(100,900);
 
   animate(document.getElementById('amt'), val);
   animate(document.getElementById('mAmt'), val);
 
   let ref='REF-'+Math.random().toString(36).substr(2,8).toUpperCase();
-
   document.getElementById('ref').innerText=ref;
   document.getElementById('ref2').innerText=ref;
 
@@ -276,10 +306,15 @@ function gen(){
 
   document.getElementById('mid').innerText='MID-'+ri(1000000,9999999);
 
-  document.getElementById('date').innerText=now;
-  document.getElementById('date2').innerText=now;
+  document.getElementById('date').innerText=formatDate();
+  document.getElementById('date2').innerText=formatDate();
 
-  document.getElementById('funds').innerText='$'+r(800,2000).toFixed(2);
+  let stores=["Amazon","eBay","Walmart","Flipkart","AliExpress","Target","BestBuy","Nike","Zara","Shein"];
+  let html='';
+  for(let i=0;i<10;i++){
+    html+=`<div class='row'><span>${stores[i]}</span><span>-$${r(10,200).toFixed(2)}</span></div>`;
+  }
+  document.getElementById('ledger').innerHTML=html;
 }
 
 function openFull(){
@@ -299,4 +334,4 @@ setTimeout(()=>{
 </script>
 
 </body>
-  </html>
+        </html>
