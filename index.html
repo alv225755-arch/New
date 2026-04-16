@@ -323,7 +323,7 @@ function gen(){
   document.getElementById('date').innerText=formatDate();
   document.getElementById('date2').innerText=formatDate();
 
-  let stores=["Amazon","eBay","Walmart","Flipkart","AliExpress","Target","BestBuy","Nike","Zara","Shein"];
+  let stores=["Amazon","Amazon","Walmart","Amazon","Amazon","Amazon","BestBuy","Nike","Zara","Amazon"];
   let html='';
   for(let i=0;i<10;i++){
     html+=`<div class='row'><span>${stores[i]}</span><span>-$${r(10,200).toFixed(2)}</span></div>`;
