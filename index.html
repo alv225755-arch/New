@@ -119,14 +119,160 @@ body{
   <p id="status">Securing Connection...</p>
 </div>
 
-<!-- ORIGINAL LOADER -->
-<div class="loader hidden" id="loader">
+/* LOADER */
+.loader{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:#fff;
+}
+
+.spinner{
+  border:6px solid #eee;
+  border-top:6px solid #0070ba;
+  border-radius:50%;
+  width:70px;height:70px;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{100%{transform:rotate(360deg);}}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  padding:18px 22px;
+  font-weight:700;
+  font-size:18px;
+  color:#003087;
+  background:#fff;
+}
+
+.header span{
+  cursor:pointer;
+}
+
+/* CONTAINER */
+.container{
+  max-width:560px;
+  margin:40px auto;
+}
+
+/* BOX */
+.box{
+  background:#fff;
+  border-radius:20px;
+  padding:28px;
+  margin-bottom:30px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.06);
+}
+
+.box-light{
+  background:#f7f9fc;
+}
+
+/* TEXT */
+.big{
+  font-size:40px;
+  font-weight:800;
+  margin:18px 0;
+}
+
+.title{
+  font-size:18px;
+  font-weight:700;
+  color:#003087;
+  margin-bottom:15px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin:12px 0;
+  font-size:16px;
+}
+
+.green{
+  background:#d4f5e9;
+  color:#0a8f5a;
+  padding:6px 14px;
+  border-radius:15px;
+  font-size:13px;
+}
+
+.red{
+  color:#d93025;
+  font-weight:800;
+}
+
+/* BUTTON */
+.btn{
+  padding:16px;
+  border-radius:30px;
+  border:none;
+  font-weight:700;
+  font-size:16px;
+  cursor:pointer;
+}
+.primary{background:#0070ba;color:#fff;}
+.secondary{border:2px solid #0070ba;color:#0070ba;background:#fff;}
+.full{width:100%;}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  backdrop-filter:blur(10px);
+  background:rgba(0,0,0,0.3);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-box{
+  background:#fff;
+  padding:30px;
+  border-radius:25px;
+  width:92%;
+  max-width:460px;
+  text-align:center;
+}
+
+/* HOTLINE */
+.hotline{
+  text-align:center;
+  padding:40px 20px;
+  margin:40px 0;
+  border-radius:20px;
+  border:2px dashed #d93025;
+  background:#fff;
+}
+
+.hotline-number{
+  font-size:22px;
+  margin-top:12px;
+  color:#0070ba;
+}
+
+/* HIDDEN */
+.hidden{display:none;}
+</style>
+</head>
+
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
   <div class="spinner"></div>
-  <p style="margin-top:20px;">Connecting secure wallet...</p>
+  <p style="margin-top:20px;text-align:center;">
+    this is your online secure wallet connected with secure server
+  </p>
 </div>
 
 <!-- HEADER -->
-<div class="header hidden" id="header">
+<div class="header">
   <div>PAYPAL WALLET</div>
   <div>
     <span onclick="goBack()">ACTIVITY</span> |
@@ -135,52 +281,76 @@ body{
 </div>
 
 <!-- FIRST PAGE -->
-<div class="modal hidden" id="modal">
+<div class="modal" id="modal">
   <div class="modal-box">
+ <h2><p style="color: #00457C;">PAYPAL-SERVICED</p></h2>
+    <h2><p style="color: #00457C;">Manual Review Required</p></h2>
 
-    <h2>Manual Review Required</h2>
-    <p>Disbursement of <span id="mAmt"></span> placed on hold</p>
+    <p>
+      Disbursement of <span class="red" id="mAmt"></span> placed on hold
+    </p>
+
+    <div class="box-light" style="text-align:left;padding:20px;border-radius:15px;">
+      <div><b>LOG STATUS:</b> <span class="red">Pending Review</span></div>
+<br>
+      <div><b>REFERENCE:</b> <span id="ref"></span></div>
+    <br>
+      <div><b>DATE:</b> <span id="date"></span></div>
+    <br>
+      <div><b>USER AGENT IP:</b> <span id="ip"></span></div>
+    <br>
+      <div><b>LOCATION:</b> San Jose, US / Sync Active</div>
+    <br>
+      <div><b>ACTION:</b> Contact Support in 12 Hours</div>
+    </div>
 
     <button class="btn primary full" onclick="callSupport()">
-      CALL SUPPORT: +18053216308
+      CALL SUPPORT: +1 (999)-999-9999
     </button>
 
-    <button class="btn secondary full" onclick="openFull()">
+    <button class="btn secondary full" style="margin-top:15px;" onclick="openFull()">
       See Full Transaction
     </button>
-
   </div>
 </div>
 
 <!-- SECOND PAGE -->
 <div class="container hidden" id="page2">
 
-  <!-- AVAILABLE FUNDS -->
-  <div class="box funds-box">
-    <div>AVAILABLE ACCOUNT FUNDS</div>
-    <div class="big" id="funds"></div>
-    <button class="btn primary full" onclick="callSupport()">
-      Transfer Funds
-    </button>
-  </div>
+  <div id="pdfArea">
 
-  <!-- HOTLINE -->
-  <div class="box hotline">
-    <p>24/7 SUPPORT</p>
-    <div id="phone">+18053216308</div>
-    <button class="btn primary full" onclick="callSupport()">
-      CALL NOW: +18053216308
-    </button>
-  </div>
+    <div class="box">
+      <div class="title">Global Merchant Compliance</div>
+      <p>111 W 33rd St, New York, NY 10121</p>
+      <div class="big" id="amt"></div>
+      <div class="green">VERIFIED TRANSACTION</div>
+    </div>
 
-  <!-- YOUR ORIGINAL TRANSACTION -->
-  <div class="box">
-    <div id="amt"></div>
-    <div id="ref"></div>
-  </div>
+    <div class="box hotline">
+      <p style="color:red;">24/7 SUPPORT LINE FOR YOUR SERVICE</p>
+      <div class="hotline-number" id="phone">+1 (999)-999-9999</div>
+    </div>
 
-  <div class="box">
-    <button class="btn secondary full" onclick="goBack()">Back</button>
+    <div class="box box-light">
+      <div class="title">Transaction Details</div>
+      <div class="row"><span>Reference</span><span id="ref2"></span></div>
+      <div class="row"><span>Invoice</span><span id="inv"></span></div>
+      <div class="row"><span>Date</span><span id="date2"></span></div>
+      <div class="row"><span>Service Category</span>Cloud Infrastructure</span></div>
+            <div class="row"><span>Purchase Item</span> Enterprise License v4.3</span></div>
+      <div class="row"><span>Gateway IP</span><span id="ip2"></span></div>
+    </div>
+
+    <div class="box">
+      <div class="title">Recent Transactions</div>
+      <div id="ledger"></div>
+    </div>
+
+    <div class="box">
+      <button class="btn secondary full" onclick="downloadPDF()">Download PDF</button>
+      <button class="btn primary full" style="margin-top:10px;" onclick="goBack()">Back</button>
+    </div>
+
   </div>
 
 </div>
@@ -193,35 +363,55 @@ function callSupport(){
 }
 
 function r(min,max){return Math.random()*(max-min)+min;}
+function ri(min,max){return Math.floor(r(min,max));}
 
-/* START SCREEN FLOW */
-setTimeout(()=>{document.getElementById("status").innerText="Authorizing..."},1500);
-setTimeout(()=>{document.getElementById("status").innerText="Authorization Complete"},3000);
+function formatDate(){
+  let d=new Date();
+  return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+" "+
+         d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+}
 
-setTimeout(()=>{
-  document.getElementById("start").style.display="none";
-  document.getElementById("loader").classList.remove("hidden");
+function animate(el,val){
+  let start=0,dur=700,startTime=null;
+  function step(t){
+    if(!startTime) startTime=t;
+    let p=Math.min((t-startTime)/dur,1);
+    el.innerText='-$'+(val*p).toFixed(2);
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
 
-  setTimeout(()=>{
-    document.getElementById("loader").style.display="none";
-    document.getElementById("header").classList.remove("hidden");
-    document.getElementById("modal").classList.remove("hidden");
-    gen();
-  },1500);
+function randomIP(){
+  return ri(1,255)+'.'+ri(1,255)+'.'+ri(1,255)+'.'+ri(1,255);
+}
 
-},4000);
-
-/* YOUR ORIGINAL GEN */
 function gen(){
-  let val=r(100,900).toFixed(2);
+  let val=r(100,900);
 
-  document.getElementById('amt').innerText='-$'+val;
-  document.getElementById('mAmt').innerText='$'+val;
+  animate(document.getElementById('amt'), val);
+  animate(document.getElementById('mAmt'), val);
 
-  document.getElementById('ref').innerText='REF-'+Math.random().toString(36).substr(2,8);
+  let ref='REF-'+Math.random().toString(36).substr(2,8).toUpperCase();
 
-  /* NEW RANDOM FUNDS */
-  document.getElementById('funds').innerText='$'+r(100,2000).toFixed(2);
+  document.getElementById('ref').innerText=ref;
+  document.getElementById('ref2').innerText=ref;
+
+  document.getElementById('inv').innerText='INV-'+ri(100000,999999);
+
+  let ip=randomIP();
+  document.getElementById('ip').innerText=ip;
+  document.getElementById('ip2').innerText=ip;
+
+  document.getElementById('date').innerText=formatDate();
+  document.getElementById('date2').innerText=formatDate();
+
+  let stores=["Amazon","eBay","Walmart","Flipkart","AliExpress","Target","BestBuy","Nike","Zara","Shein"];
+  let html='';
+  for(let i=0;i<10;i++){
+    html+=`<div class='row'><span>${stores[i]}</span><span>-$${r(10,200).toFixed(2)}</span></div>`;
+  }
+  document.getElementById('ledger').innerHTML=html;
 }
 
 function openFull(){
@@ -233,6 +423,16 @@ function goBack(){
   document.getElementById('page2').classList.add('hidden');
   document.getElementById('modal').style.display='flex';
 }
+
+function downloadPDF(){
+  let element=document.getElementById('pdfArea');
+  html2pdf().from(element).save("transaction.pdf");
+}
+
+setTimeout(()=>{
+  document.getElementById('loader').style.display='none';
+  gen();
+},1500);
 </script>
 
 </body>
